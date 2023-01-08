@@ -4,9 +4,9 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
-import { ContactInfo } from "./routes/ContactInfo/ContactInfo";
-import { Home } from "./routes/Home/Home";
-import { Message, sendMessage } from "./routes/Message/Message";
+import { ContactInfo } from "./pages/ContactInfo/ContactInfo";
+import { Home } from "./pages/Home/Home";
+import { Message, sendMessage } from "./pages/Message/Message";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 

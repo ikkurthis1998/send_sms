@@ -8,9 +8,10 @@ import { Controller } from "../utils/decorators/controller.decorator";
 import { DB } from "../database";
 import { EMessageStatus } from "../store/enum/messageStatus.enum";
 
+// This class contains the controllers for the text message routes
 export class TextMessage {
-	@Controller()
 	static async send(req: Request): Promise<TFunctionResponse> {
+		// Validate that phone number and message are present in the request body
 		try {
 			const { phone, message, otp } = req.body;
 
@@ -32,12 +33,14 @@ export class TextMessage {
 				});
 			}
 
+			// Check if the phone number exists in the contacts collection
 			const contact = await DB.Models.Contact.findOne({
 				phone,
 			}).lean();
 
 			let messageDoc;
 			if (contact) {
+				// If the phone number exists, create a new message document and store it in the messages collection
 				messageDoc = await DB.Models.Message.create({
 					contact: contact._id,
 					message,
@@ -45,9 +48,11 @@ export class TextMessage {
 				});
 			}
 
+			// Send the text message using the Twilio service
 			await twilioService.sendTextMessage({ phone, message });
 
 			if (messageDoc) {
+				// If the message document was created, update its status to 'sent'
 				await DB.Models.Message.updateOne(
 					{
 						_id: messageDoc._id,
@@ -59,6 +64,7 @@ export class TextMessage {
 					}
 				);
 			}
+			// Return success response
 			return {
 				status: EStatus.SUCCESS,
 				statusCode: EHTTPStatusCode.OK,
@@ -66,6 +72,7 @@ export class TextMessage {
 				data: {},
 			};
 		} catch (error) {
+			// If an error occurred, throw a FunctionError with the error details
 			if (error instanceof FunctionError) {
 				throw new FunctionError({
 					status: EStatus.ERROR,
@@ -86,8 +93,10 @@ export class TextMessage {
 	@Controller()
 	static async getAll(req: Request): Promise<TFunctionResponse> {
 		try {
+			// Fetch all messages from the database
 			const messages = await DB.Models.Message.find().populate("contact").lean();
 
+			// Return success response with the messages
 			return {
 				status: EStatus.SUCCESS,
 				statusCode: EHTTPStatusCode.OK,
@@ -95,6 +104,7 @@ export class TextMessage {
 				data: messages,
 			};
 		} catch (error) {
+			// If an error occurred, throw a FunctionError with the error details
 			if (error instanceof FunctionError) {
 				throw new FunctionError({
 					status: EStatus.ERROR,
