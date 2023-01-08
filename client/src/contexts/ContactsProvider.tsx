@@ -31,7 +31,7 @@ export const ContactsProvider = ({ children }: { children: React.ReactNode }) =>
 
 			fetchContacts();
 		}
-	}, []);
+	}, [contacts]);
 
 	return <ContactsContext.Provider value={{ contacts }}>{children}</ContactsContext.Provider>;
 };

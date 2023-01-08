@@ -14,6 +14,7 @@ type TMessage = {
 
 export const Messages = () => {
 	const [messages, setMessages] = useState<TMessage[]>([]);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchMessages = async () => {
@@ -27,6 +28,7 @@ export const Messages = () => {
 				);
 				setMessages(messages);
 			}
+			setLoading(false);
 		};
 
 		fetchMessages();
@@ -40,6 +42,17 @@ export const Messages = () => {
 				<div className="message_date">Sent At</div>
 				<div className="message_status">Status</div>
 			</div>
+			{loading && (
+				<div
+					style={{
+						width: "100%",
+						textAlign: "center",
+						marginTop: "20px",
+					}}
+				>
+					Loading...
+				</div>
+			)}
 			{messages &&
 				messages.map((message) => {
 					return (

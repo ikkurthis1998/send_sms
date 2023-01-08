@@ -38,7 +38,7 @@ export const sendMessage = async ({ request, params }: ActionFunctionArgs) => {
 
 		return redirect(`/contactInfo/${params.id}/sendMessage?success=Message sent successfully`);
 	} catch (error) {
-		console.error(error);
+		return redirect(`/contactInfo/${params.id}/sendMessage?error=Error sending message`);
 	}
 };
 
@@ -53,16 +53,18 @@ export const Message = () => {
 	const { error, success } = Object.fromEntries(searchParams);
 
 	useEffect(() => {
-		const toastWait = setTimeout(() => {
-			searchParams.delete("error");
-			searchParams.delete("success");
-			setSearchParams(searchParams);
-		}, 3000);
+		if (error || success) {
+			const toastWait = setTimeout(() => {
+				searchParams.delete("error");
+				searchParams.delete("success");
+				setSearchParams(searchParams);
+			}, 3000);
 
-		return () => {
-			clearTimeout(toastWait);
-		};
-	}, [error, success]);
+			return () => {
+				clearTimeout(toastWait);
+			};
+		}
+	}, [searchParams, setSearchParams]);
 
 	if (!id) {
 		return <Navigate to="/" />;
