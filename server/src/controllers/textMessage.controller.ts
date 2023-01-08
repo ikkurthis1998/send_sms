@@ -10,6 +10,7 @@ import { EMessageStatus } from "../store/enum/messageStatus.enum";
 
 // This class contains the controllers for the text message routes
 export class TextMessage {
+	@Controller()
 	static async send(req: Request): Promise<TFunctionResponse> {
 		// Validate that phone number and message are present in the request body
 		try {
